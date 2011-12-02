@@ -13,7 +13,6 @@ public class ResourceCollection extends PointCollection implements Drawable{
 	
 	public void update(int delay){
 	
-	
 	}
 	
 	public void draw (Graphics g){

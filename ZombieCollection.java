@@ -13,16 +13,36 @@ public class ZombieCollection extends PointCollection implements Dynamic{
 	}
 	
 	public void update(int delay){
-//		TreeSet<Point2D.Double> newPoints = new TreeSet<Point2D.Double>(new XPointCompare());
-//		
-//		Iterator<Point2D.Double> iter = get();
-//		while (iter.hasNext()){
-//			Point2D.Double p = iter.next();
-//			
-//			newPoints.add(new Point2D.Double(p.x+1.0, p.y+1.0));
-//		}
-//		
-//		setSets(newPoints);
+		TreeSet<Point2D.Double> newPoints = new TreeSet<Point2D.Double>(new XPointCompare());
+		
+		Iterator<Point2D.Double> iter = get();
+		while (iter.hasNext()){
+			Point2D.Double p = iter.next();
+			
+			Point2D.Double target = new Point2D.Double();
+			boolean alerted = false;
+			Iterator<Point2D.Double> sIter = world.getSurvivors();
+			while (sIter.hasNext()){
+				Point2D.Double sp = sIter.next();
+				
+				if (sp.distance(p) < 60.0 && p.distance(target) > p.distance(sp)){
+					target = sp;
+					alerted = true;
+				}
+			}
+			
+			if (alerted){
+				double xChange = target.x - p.x;
+				double yChange = target.y - p.y;
+				double div = Math.sqrt(xChange*xChange + yChange*yChange);
+				
+				newPoints.add(new Point2D.Double(p.x+xChange/div, p.y+yChange/div));
+			} else {
+				newPoints.add(new Point2D.Double(p.x, p.y));
+			}
+		}
+		
+		setSets(newPoints);
 	}
 	
 	public void draw (Graphics g){
