@@ -17,6 +17,10 @@ public class PointCollection{
 		worldWidth = w;
 	}
 	
+	public int size(){
+		return xSorted.size();
+	}
+	
 	public void setSets(TreeSet<Point2D.Double> set){
 		xSorted.clear();
 		ySorted.clear();

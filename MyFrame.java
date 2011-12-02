@@ -112,6 +112,9 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setVisible(true);
+		
+		displayPanel.initWorld();
+		
 		button1.addKeyListener(this);
 		button2.addKeyListener(this);
 		radioButton1.addKeyListener(this);
