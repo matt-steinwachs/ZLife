@@ -27,9 +27,11 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 					dead = true;
 			}
 			
-			if(!dead)
-				//newPoints.add(nextMove(p));
-				newPoints.add(new Point2D.Double(p.x+1.0, p.y+1.0));
+			if(!dead){
+				Point2D.Double move = nextMove(p);											//Treated as a vector
+				double div = Math.sqrt(move.x*move.x + move.y*move.y);	//divisor to convert to unit vector
+				newPoints.add(new Point2D.Double(p.x+move.x/div, p.y+move.y/div));
+			}
 		}
 		
 		setSets(newPoints);
@@ -38,7 +40,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	public Point2D.Double nextMove(Point2D.Double p){
 		//if move mode is delauney call delauney(p) and return result
 		//else call potentialField(p) and return result
-		return new Point2D.Double(0.0,0.0);
+		return new Point2D.Double(1.0,0.0);
 	}
 	
 	public void draw (Graphics g){

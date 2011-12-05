@@ -29,7 +29,7 @@ public class World implements Dynamic {
 		sc = new SurvivorCollection(h,w,this);
 		
 		rc = new ResourceCollection(h,w,this);
-		this.addRandomResources(3);
+		this.addRandomResources(1);
 	}
 	
 	public Iterator<Point2D.Double> getZombies(){

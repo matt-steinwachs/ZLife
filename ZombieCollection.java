@@ -25,7 +25,7 @@ public class ZombieCollection extends PointCollection implements Dynamic{
 			while (sIter.hasNext()){
 				Point2D.Double sp = sIter.next();
 				
-				if (sp.distance(p) < 60.0 && p.distance(target) > p.distance(sp)){
+				if (sp.distance(p) < 150.0 && p.distance(target) > p.distance(sp)){
 					target = sp;
 					alerted = true;
 				}
@@ -36,7 +36,7 @@ public class ZombieCollection extends PointCollection implements Dynamic{
 				double yChange = target.y - p.y;
 				double div = Math.sqrt(xChange*xChange + yChange*yChange);
 				
-				newPoints.add(new Point2D.Double(p.x+xChange/div, p.y+yChange/div));
+				newPoints.add(new Point2D.Double(p.x+xChange/(div*2), p.y+yChange/(div*2)));
 			} else {
 				newPoints.add(new Point2D.Double(p.x, p.y));
 			}

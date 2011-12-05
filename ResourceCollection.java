@@ -11,10 +11,6 @@ public class ResourceCollection extends PointCollection implements Drawable{
 		world = wrld;
 	}
 	
-	public void update(int delay){
-	
-	}
-	
 	public void draw (Graphics g){
 		g.setColor(new Color(255,0,0));
 		
