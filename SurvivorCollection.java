@@ -15,7 +15,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	//private Map<N, Set<N>> theNeighbors; 
   //private Set<N> theNodeSet;
   private Point2D.Double currentSubTarget;
-  private boolean subTargetReached = false;
+  private boolean subTargetReached = true;
   
   // Variables for determining current target for both methods
   private Point2D.Double currentTarget;
@@ -34,6 +34,8 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		while (iter.hasNext()){
 			Point2D.Double p = iter.next();
 			
+			
+			//Has survivor reached target?
 			if (targetIsResource){
 				Iterator<Point2D.Double> rIter = world.getResources();
 				Point2D.Double rp = rIter.next();
@@ -59,6 +61,8 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				}
 			}
 			
+		
+			
 			boolean dead = false;
 			Iterator<Point2D.Double> zIter = world.getZombies();
 			while (zIter.hasNext()){
@@ -68,13 +72,27 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 					dead = true;
 					targetReached = false;
 					targetIsResource = true;
+					subTargetReached = true;
+					System.out.println("survivor died");
 				}
 			}
 			
 			if(!dead){
 				Point2D.Double move = nextMove(p);											//Treated as a vector
 				double div = Math.sqrt(move.x*move.x + move.y*move.y);	//divisor to convert to unit vector
-				newPoints.add(new Point2D.Double(p.x+move.x/div, p.y+move.y/div));
+				if (div != 0.0) {
+					//System.out.println((p.x+move.x/div)+"..."+(p.y+move.y/div));
+					newPoints.add(new Point2D.Double(p.x+move.x/div, p.y+move.y/div));
+				} else {
+					newPoints.add(new Point2D.Double(p.x, p.y));
+					System.out.println("divide by zero avoided");
+				}
+			}
+			
+			//Has survivor reached subTarget?  Used for delaunay
+			if (p.distance(currentSubTarget) < 10.0){
+				subTargetReached = true;
+				System.out.println("subtarget reached");
 			}
 		}
 		
@@ -93,34 +111,113 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		return new Point2D.Double(0.0,0.0);
 	}
 	
-	private Point2D.Double delaunay(Double p) {
+	private Point2D.Double delaunay(Point2D.Double p) {
 		/*Straight Line Pathfinding for Testing*/
-		double xChange = currentTarget.x - p.x;
-		double yChange = currentTarget.y - p.y;
-		return new Point2D.Double(xChange, yChange);
+		//double xChange = currentTarget.x - p.x;
+		//double yChange = currentTarget.y - p.y;
+		//return new Point2D.Double(xChange, yChange);
 		
-		/*
-		if (subTargetReached){
-			Triangle tri =
+		if (p.distance(currentTarget) < 150.0){
+			currentSubTarget = currentTarget;
+			System.out.println("Close enough to target. Going for it!.");
+		} else if (subTargetReached){
+			//Create delaunay triangulation
+			Triangle initialTriangle =
 				new Triangle(new Pnt(0,super.getWorldHeight()*2), 
 											new Pnt(0,0), 
 											new Pnt(super.getWorldWidth()*2,0));
-										
-			Triangulation dt = new Triangulation(tri);
+			Triangulation dt = new Triangulation(initialTriangle);
+			
+			//Add zombies to triangulation
 			Iterator<Point2D.Double> zombies = world.getZombies();
 			while (zombies.hasNext()){
 				Point2D.Double z = zombies.next();
 				dt.delaunayPlace(new Pnt(z.x,z.y));
 			}
 			
-			Triangle.moreInfo = true;
+			//Add resources to triangulation
+			Iterator<Point2D.Double> resources = world.getResources();
+			while (resources.hasNext()){
+				Point2D.Double r = resources.next();
+				dt.delaunayPlace(new Pnt(r.x,r.y));
+			}
+			
+			//Add Base to Triangulation
+			Point2D.Double base = world.getBase();
+			dt.delaunayPlace(new Pnt(base.x,base.y));
+			
+			//Add points along border to triangulation
+			double worldHeight = super.getWorldHeight();
+			double worldWidth = super.getWorldWidth();
+			dt.delaunayPlace(new Pnt(1, 1));
+			dt.delaunayPlace(new Pnt(1, worldHeight/2));
+			dt.delaunayPlace(new Pnt(1, worldHeight-1));
+			
+			dt.delaunayPlace(new Pnt(worldWidth/2, 1));
+			dt.delaunayPlace(new Pnt(worldWidth-1, 1));
+			
+			dt.delaunayPlace(new Pnt(worldWidth-1, worldHeight/2));
+			dt.delaunayPlace(new Pnt(worldWidth-1, worldHeight-1));
+			
+			dt.delaunayPlace(new Pnt(worldWidth/2, worldHeight-1));
+			
+			//Add survivor location to triangulation
+			//dt.delaunayPlace(new Pnt(p.x, p.y));
+			
+			//get vertices of voronoi graph
+			TreeSet<Point2D.Double> subTargets = new TreeSet<Point2D.Double>(new XPointCompare());
+			int i = 0;
+			HashSet<Pnt> done = new HashSet<Pnt>(initialTriangle);
+				for (Triangle triangle : dt)
+					for (Pnt site: triangle) {
+						if (done.contains(site)) continue;
+						done.add(site);
+						List<Triangle> list = dt.surroundingTriangles(site, triangle);
+						for (Triangle tri: list){
+							Pnt cc = tri.getCircumcenter();
+							subTargets.add(new Point2D.Double(cc.coord(0), cc.coord(1)));
+						}
+					}
+			
+			//Get closest vertex that is closer to the target
+			Iterator<Point2D.Double> stIter =  subTargets.iterator();
+			Point2D.Double nextSubTarget = new Point2D.Double();
+			if (stIter.hasNext())
+				nextSubTarget = stIter.next();
+			else
+				System.out.println("no candidate subtargets!");
+				
+			while (stIter.hasNext()){
+				Point2D.Double candidate = stIter.next();
+				if (candidate.distance(p) < nextSubTarget.distance(p) &&
+						candidate.distance(currentTarget) < p.distance(currentTarget) &&
+						candidate.distance(p) > 10.0 &&
+						closestZombieDistance(candidate) > 20.0)
+					nextSubTarget = candidate;
+			}
+			currentSubTarget = nextSubTarget;
 		}
 		
-		return new Point2D.Double(1.0, 0.0);
-		*/
+		double xChange = currentSubTarget.x - p.x;
+		double yChange = currentSubTarget.y - p.y;
+		
+		//System.out.println("new subtarget: ("+currentSubTarget.x+", "+currentSubTarget.y+")");
+		return new Point2D.Double(xChange, yChange);
+	}
+	
+	//returns the distance from a point to the closest zombie
+	private double closestZombieDistance(Point2D.Double p){
+		Iterator<Point2D.Double> zombies = world.getZombies();
+		double closest = 1000000000;
+		while (zombies.hasNext()){
+			Point2D.Double z = zombies.next();
+			if (p.distance(z) < closest)
+				closest = p.distance(z);
+		}
+		return closest;
 	}
 
-	private Point2D.Double potential(Double p) {
+	private Point2D.Double potential(Point2D.Double p) {
 		Iterator<Point2D.Double> zombies = world.getZombies();
 		Iterator<Point2D.Double> resources = world.getResources();
 		Point2D.Double baseLoc = world.getBase();

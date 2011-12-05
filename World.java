@@ -68,7 +68,7 @@ public class World implements Dynamic {
 	public void addRandomResources(int num){
 		for (int i=0; i<num; i++){
 			Point2D.Double candidate = randomPointInWorld();
-			while (candidate.distance((Point2D) baseLoc) < 30.0)
+			while (candidate.distance((Point2D) baseLoc) < 300.0)
 				candidate = randomPointInWorld();
 			rc.add(candidate);
 		}
@@ -85,6 +85,9 @@ public class World implements Dynamic {
 			sc.update(delay);
 		else
 			sc.add(baseLoc);
+			
+		if (zc.size() < 10)
+			addRandomZombies(10 - zc.size());
 			
 		zc.update(delay);
 	}
