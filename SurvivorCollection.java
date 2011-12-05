@@ -42,10 +42,6 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	
 	public Point2D.Double nextMove(Point2D.Double p){
 		//if move mode is delauney call delauney(p) and return result
-<<<<<<< HEAD
-		//else call potentialField(p) and return result
-		return new Point2D.Double(1.0,0.0);
-=======
 		if(isDelauney){
 			return delauney(p);
 		}
@@ -54,7 +50,6 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			return potential(p);
 		}		
 		return new Point2D.Double(0.0,0.0);
->>>>>>> 04b0db618f4f9ca9c7651b7813f840289276da9c
 	}
 	
 	private Point2D.Double delauney(Double p) {
