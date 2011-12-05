@@ -11,13 +11,15 @@ import javax.swing.JPanel;
 public class MyDisplayPanel extends JPanel{
 	private World world;
 	private int zX = 200, zY = 200;
+	private MyFrame myFrame;
 	
-	public MyDisplayPanel(){
+	public MyDisplayPanel(MyFrame mf){
 		super();
+		myFrame = mf;
 	}
 	
 	public void initWorld(){
-		world = new World(this.getHeight(),this.getWidth());
+		world = new World(this.getHeight(),this.getWidth(), myFrame);
 	}
 	
 	

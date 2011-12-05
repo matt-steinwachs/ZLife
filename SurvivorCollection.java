@@ -13,10 +13,13 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	
 	//Delaunay related variables;
 	//private Map<N, Set<N>> theNeighbors; 
-  //private Set<N> theNodeSet; 
+  //private Set<N> theNodeSet;
   private Point2D.Double currentSubTarget;
-  private Point2D.Double currentTarget;
   private boolean subTargetReached = false;
+  
+  // Variables for determining current target for both methods
+  // If you want to use them
+  private Point2D.Double currentTarget;
   private boolean targetReached = false;
   private boolean targetIsResource = true;
 	
@@ -49,6 +52,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				currentTarget = world.getBase();
 				if (world.getBase().distance(p) < 20.0){
 					targetReached = true;
+					world.resourceGathered();
 					targetIsResource = true;
 					Iterator<Point2D.Double> resources = world.getResources();
 					currentTarget = resources.next();
@@ -64,8 +68,11 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			while (zIter.hasNext()){
 				Point2D.Double zp = zIter.next();
 				
-				if (zp.distance(p) < 20.0)
+				if (zp.distance(p) < 20.0){
 					dead = true;
+					targetReached = false;
+					targetIsResource = true;
+				}
 			}
 			
 			if(!dead){

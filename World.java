@@ -14,11 +14,14 @@ public class World implements Dynamic {
 	private double height;
 	private double width;
 	
+	private MyFrame myFrame;
+	
 	private Random rand;
 	
-	public World(double h, double w){
+	public World(double h, double w, MyFrame mf){
 		height = h;
 		width = w;
+		myFrame = mf;
 		rand = new Random();
 		
 		baseLoc = randomPointInWorld();
@@ -30,6 +33,10 @@ public class World implements Dynamic {
 		
 		rc = new ResourceCollection(h,w,this);
 		this.addRandomResources(1);
+	}
+	
+	public void resourceGathered(){
+		myFrame.resourceGathered();
 	}
 	
 	public Iterator<Point2D.Double> getZombies(){

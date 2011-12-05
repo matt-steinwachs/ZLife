@@ -93,7 +93,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		panel3.add(button2);
 		this.add(panel3, BorderLayout.WEST);
 		
-		displayPanel = new MyDisplayPanel();
+		displayPanel = new MyDisplayPanel(this);
 		displayPanel.setBackground(background);
 		displayPanel.setDoubleBuffered(true);
 		this.add(displayPanel, BorderLayout.CENTER);
@@ -125,7 +125,10 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		this.requestFocus();
 	}
 
-
+	public void resourceGathered(){
+		resources++;
+	}
+	
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
