@@ -31,14 +31,20 @@ public class ZombieCollection extends PointCollection implements Dynamic{
 				}
 			}
 			
-			if (alerted){
+			boolean destroyed = false;
+			if (world.getBase().distance(p) < 30.0)
+				destroyed = true;
+			
+			if (alerted && !destroyed){
 				double xChange = target.x - p.x;
 				double yChange = target.y - p.y;
 				double div = Math.sqrt(xChange*xChange + yChange*yChange);
 				
 				newPoints.add(new Point2D.Double(p.x+xChange/(div*2), p.y+yChange/(div*2)));
-			} else {
+			} else if (!destroyed) {
 				newPoints.add(new Point2D.Double(p.x, p.y));
+			} else {
+				newPoints.add(world.randomPointInWorld());
 			}
 		}
 		

@@ -24,7 +24,7 @@ public class World implements Dynamic {
 		baseLoc = randomPointInWorld();
 		
 		zc = new ZombieCollection(h,w,this);
-		this.addRandomZombies(1);
+		this.addRandomZombies(10);
 		
 		sc = new SurvivorCollection(h,w,this);
 		
