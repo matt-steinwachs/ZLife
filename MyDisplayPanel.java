@@ -14,7 +14,6 @@ public class MyDisplayPanel extends JPanel{
 	
 	public MyDisplayPanel(){
 		super();
-		System.out.println();
 	}
 	
 	public void initWorld(){
@@ -29,12 +28,17 @@ public class MyDisplayPanel extends JPanel{
 		super.paintComponent(g);
 		g.clearRect(0, 0, this.getWidth(), this.getHeight());
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		world.draw(g);
+		if(world != null)
+			world.draw(g);
 		
 		//System.out.println(this.getWidth()+"  "+this.getHeight());
 	}
 
 	public void update(int delay) {
 		world.update(delay);
+	}
+	
+	public World getWorld(){
+		return world;
 	}
 }

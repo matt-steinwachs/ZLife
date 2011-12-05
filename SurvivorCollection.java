@@ -1,10 +1,13 @@
 import java.util.*;
 import java.awt.geom.*;
+import java.awt.geom.Point2D.Double;
 import java.awt.Graphics;
 import java.awt.Color;
 
 public class SurvivorCollection extends PointCollection implements Dynamic{
 	private World world;
+	private boolean isDelauney = false;
+	private boolean isPotential = false;
 	
 	public SurvivorCollection(double h, double w, World wrld){
 		super(h,w);
@@ -39,10 +42,45 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	
 	public Point2D.Double nextMove(Point2D.Double p){
 		//if move mode is delauney call delauney(p) and return result
+<<<<<<< HEAD
 		//else call potentialField(p) and return result
 		return new Point2D.Double(1.0,0.0);
+=======
+		if(isDelauney){
+			return delauney(p);
+		}
+		//else call potential(p) and return result
+		else if(isPotential){
+			return potential(p);
+		}		
+		return new Point2D.Double(0.0,0.0);
+>>>>>>> 04b0db618f4f9ca9c7651b7813f840289276da9c
 	}
 	
+	private Point2D.Double delauney(Double p) {
+		return new Point2D.Double(p.x+1.0, p.y+1.0);
+	}
+
+	private Point2D.Double potential(Double p) {
+		Iterator<Point2D.Double> zombies = world.getZombies();
+		Iterator<Point2D.Double> resources = world.getResources();
+		Point2D.Double baseLoc = world.getBase();
+		double xAdd, yAdd;
+		if(p.x < resources.next().x){
+			xAdd = 1.0;
+		}
+		else{
+			xAdd = -1.0;
+		}
+		if(p.y < resources.next().y){
+			yAdd = 1.0;
+		}
+		else{
+			yAdd = -1.0;
+		}
+		return new Point2D.Double(p.x + xAdd, p.y + yAdd);
+	}
+
 	public void draw (Graphics g){
 		g.setColor(new Color(0,0,255));
 		
@@ -53,5 +91,13 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		}
 		
 	} 
+	public void setDelauney(){
+		isDelauney = true;
+		isPotential = false;
+	}
+	public void setPotential(){
+		isDelauney = false;
+		isPotential = true;
+	}
 }
 

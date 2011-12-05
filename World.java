@@ -90,4 +90,8 @@ public class World implements Dynamic {
 		g.setColor(new Color(255,255,0));
 		g.fillRect((int) baseLoc.x-10, (int) baseLoc.y-10, 20, 20);
 	}
+	
+	public SurvivorCollection getSurvCollection(){
+		return sc;
+	}
 }
