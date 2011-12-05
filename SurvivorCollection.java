@@ -18,7 +18,6 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
   private boolean subTargetReached = false;
   
   // Variables for determining current target for both methods
-  // If you want to use them
   private Point2D.Double currentTarget;
   private boolean targetReached = false;
   private boolean targetIsResource = true;
@@ -44,7 +43,6 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 					targetReached = true;
 					targetIsResource = false;
 					currentTarget = world.getBase();
-					System.out.println("targetReached");
 				} else {
 					targetReached = false;
 				}
@@ -56,8 +54,6 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 					targetIsResource = true;
 					Iterator<Point2D.Double> resources = world.getResources();
 					currentTarget = resources.next();
-					
-					System.out.println("targetReached");
 				} else {
 					targetReached = false;
 				}
@@ -98,30 +94,30 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	}
 	
 	private Point2D.Double delaunay(Double p) {
+		/*Straight Line Pathfinding for Testing*/
 		double xChange = currentTarget.x - p.x;
 		double yChange = currentTarget.y - p.y;
-				
 		return new Point2D.Double(xChange, yChange);
 		
+		/*
+		if (subTargetReached){
+			Triangle tri =
+				new Triangle(new Pnt(0,super.getWorldHeight()*2), 
+											new Pnt(0,0), 
+											new Pnt(super.getWorldWidth()*2,0));
+										
+			Triangulation dt = new Triangulation(tri);
+			Iterator<Point2D.Double> zombies = world.getZombies();
+			while (zombies.hasNext()){
+				Point2D.Double z = zombies.next();
+				dt.delaunayPlace(new Pnt(z.x,z.y));
+			}
+			
+			Triangle.moreInfo = true;
+		}
 		
-//		Triangle tri =
-//			new Triangle(new Pnt(0,super.getWorldHeight()*2), new Pnt(0,0), new Pnt(super.getWorldWidth()*2,0));
-		//System.out.println("Triangle created: " + tri);
-//		Triangulation dt = new Triangulation(tri);
-		//System.out.println("DelaunayTriangulation created: " + dt);
-//		Iterator<Point2D.Double> zombies = world.getZombies();
-//		while (zombies.hasNext()){
-//			Point2D.Double z = zombies.next();
-//			dt.delaunayPlace(new Pnt(z.x,z.y));
-//		}
-//		//dt.delaunayPlace(new Pnt(0,0));
-//		//dt.delaunayPlace(new Pnt(1,0));
-//		//dt.delaunayPlace(new Pnt(0,1));
-//		//System.out.println("After adding 3 points, we have a " + dt);
-//		Triangle.moreInfo = true;
-//		System.out.println("Triangles: " + dt.triGraph.nodeSet());
-//		
-//		return new Point2D.Double(1.0, 0.0);
+		return new Point2D.Double(1.0, 0.0);
+		*/
 	}
 
 	private Point2D.Double potential(Double p) {
@@ -145,7 +141,10 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	}
 
 	public void draw (Graphics g){
-		g.setColor(new Color(0,0,255));
+		if (targetIsResource)
+			g.setColor(new Color(0,0,255));
+		else 
+			g.setColor(new Color(255,0,255));
 		
 		Iterator<Point2D.Double> iter = this.get();
 		while (iter.hasNext()){

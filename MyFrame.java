@@ -161,11 +161,11 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 			button1.setEnabled(false);
 			button2.setEnabled(true);
 			if(radioButton3.isSelected()){
-				System.out.println("Delauney seleceted!");
+				System.out.println("Delauney selected!");
 				displayPanel.getWorld().getSurvCollection().setDelauney();
 			}
 			else if (radioButton4.isSelected()){
-				System.out.println("Potential selected");
+				System.out.println("Potential selected!?");
 				displayPanel.getWorld().getSurvCollection().setPotential();
 			}
 			radioButton1.setEnabled(false);
