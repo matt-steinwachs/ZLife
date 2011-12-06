@@ -6,7 +6,7 @@ public class PotentialField {
 	private World world;
 	private Double target, survivor;
 	private boolean targetResource;
-	private double survivorDiameter = 8.0;
+	private double survivorDiameter = 20.0;
 	
 	public PotentialField(World wor, Double currentTarget,
 			boolean targetIsResource, Double p) {

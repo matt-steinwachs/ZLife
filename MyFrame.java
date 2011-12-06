@@ -159,9 +159,9 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 			displayPanel.setBackground(new Color(255,255,255));
 			displayPanel.update(timer.getDelay());
 			displayPanel.repaint();
-			World wor = displayPanel.getWorld();
+			/* World wor = displayPanel.getWorld();
 			if(time % 100 == 0 && wor.getSurvCollection().size() < 10)
-				wor.getSurvCollection().add(wor.getBase());
+				wor.getSurvCollection().add(wor.getBase());*/
 		}
 		else if(arg0.getSource().equals(button1)){
 			button1.setEnabled(false);

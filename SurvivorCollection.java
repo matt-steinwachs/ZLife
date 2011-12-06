@@ -23,7 +23,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
   private boolean targetIsResource = true;
   
   //Change the size of survivors (should do the same for zombies)
-  private double diameter = 8;
+  private double diameter = 20;
 	
 	public SurvivorCollection(double h, double w, World wrld){
 		super(h,w);

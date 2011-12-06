@@ -6,7 +6,7 @@ import java.awt.Graphics;
 
 public class ZombieCollection extends PointCollection implements Dynamic{
 	private World world;
-	private int diameter = 8;
+	private int diameter = 20;
 	
 	public ZombieCollection(double h, double w, World wrld){
 		super(h,w);
