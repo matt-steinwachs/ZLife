@@ -45,9 +45,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		button2.setToolTipText("<html>Will stop the simulation.<br>Will not be able to resume <br>(I'm guessing)</html>");
 		button2.setEnabled(false);
 		topPanel = new JPanel();
-		button3 = new JButton();
-		button3.setBackground(new Color(255, 0, 0));
-		button3.setSize(1, 1);
+		button3 = new JButton("Reset");
 		button1.addActionListener(this);
 		button2.addActionListener(this);
 		button3.addActionListener(this);
@@ -86,11 +84,12 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		panel2.setBorder(BorderFactory.createTitledBorder("Local Search Alg."));
 		
 		panel3 = new JPanel();
-		panel3.setLayout(new GridLayout(5, 1));
+		panel3.setLayout(new GridLayout(6, 1));
 		panel3.add(panel1);
 		panel3.add(panel2);
 		panel3.add(button1);
 		panel3.add(button2);
+		panel3.add(button3);
 		this.add(panel3, BorderLayout.WEST);
 		
 		displayPanel = new MyDisplayPanel(this);
@@ -117,6 +116,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		
 		button1.addKeyListener(this);
 		button2.addKeyListener(this);
+		button3.addKeyListener(this);
 		radioButton1.addKeyListener(this);
 		radioButton2.addKeyListener(this);
 		radioButton3.addKeyListener(this);
@@ -178,6 +178,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		else if(arg0.getSource().equals(button2)){
 			button1.setEnabled(true);
 			button2.setEnabled(false);
+			button3.setEnabled(false);
 			radioButton1.setEnabled(true);
 			radioButton2.setEnabled(true);
 			radioButton3.setEnabled(true);
@@ -187,7 +188,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 			this.requestFocus();
 		}
 		else if(arg0.getSource().equals(button3)){
-			System.exit(0);
+			displayPanel.initWorld();
 		}
 	}
 }
