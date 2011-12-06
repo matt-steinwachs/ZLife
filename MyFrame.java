@@ -160,6 +160,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		else if(arg0.getSource().equals(button1)){
 			button1.setEnabled(false);
 			button2.setEnabled(true);
+			button3.setEnabled(false);
 			if(radioButton3.isSelected()){
 				System.out.println("Delauney selected!");
 				displayPanel.getWorld().getSurvCollection().setDelauney();
@@ -178,7 +179,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		else if(arg0.getSource().equals(button2)){
 			button1.setEnabled(true);
 			button2.setEnabled(false);
-			button3.setEnabled(false);
+			button3.setEnabled(true);
 			radioButton1.setEnabled(true);
 			radioButton2.setEnabled(true);
 			radioButton3.setEnabled(true);
@@ -189,6 +190,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		}
 		else if(arg0.getSource().equals(button3)){
 			displayPanel.initWorld();
+			displayPanel.repaint();
 		}
 	}
 }

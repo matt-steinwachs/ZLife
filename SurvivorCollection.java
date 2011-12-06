@@ -94,7 +94,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			}
 			
 			//Has survivor reached subTarget?  Used for delaunay
-			if (p.distance(currentSubTarget) < 10.0){
+			if (isDelauney && p.distance(currentSubTarget) < 10.0){
 				subTargetReached = true;
 				System.out.println("subtarget reached");
 			}
@@ -241,23 +241,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 	}
 
 	private Point2D.Double potential(Point2D.Double p) {
-		Iterator<Point2D.Double> zombies = world.getZombies();
-		Iterator<Point2D.Double> resources = world.getResources();
-		Point2D.Double baseLoc = world.getBase();
-		double xAdd, yAdd;
-		if(p.x < resources.next().x){
-			xAdd = 1.0;
-		}
-		else{
-			xAdd = -1.0;
-		}
-		if(p.y < resources.next().y){
-			yAdd = 1.0;
-		}
-		else{
-			yAdd = -1.0;
-		}
-		return new Point2D.Double(p.x + xAdd, p.y + yAdd);
+		return new PotentialField(world, currentTarget, targetIsResource, p).calculate();
 	}
 
 	public void draw (Graphics g){
