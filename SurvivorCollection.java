@@ -121,7 +121,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		//double yChange = currentTarget.y - p.y;
 		//return new Point2D.Double(xChange, yChange);
 		
-		if (p.distance(currentTarget) < 150.0){
+		if (p.distance(currentTarget) < 100.0){
 			currentSubTarget = currentTarget;
 			System.out.println("Close enough to target. Going for it!.");
 		} else if (subTargetReached){
@@ -207,7 +207,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				Point2D.Double candidate = stIter.next();
 				if (candidate.distance(p) < nextSubTarget.distance(p) &&
 						candidate.distance(currentTarget) < p.distance(currentTarget) &&
-						closestZombieToPath(p, candidate) > 50.0
+						closestZombieToPath(p, candidate) > 30.0
 						){
 					nextSubTarget = candidate;
 					suitableSubTargetFound = true;
@@ -218,6 +218,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			if (!suitableSubTargetFound){
 				System.out.println("No suitable subtarget found.");
 				currentSubTarget = currentTarget;
+				subTargetReached = true;
 			}
 		}
 		

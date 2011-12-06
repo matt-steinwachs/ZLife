@@ -25,7 +25,7 @@ public class ZombieCollection extends PointCollection implements Dynamic{
 			while (sIter.hasNext()){
 				Point2D.Double sp = sIter.next();
 				
-				if (sp.distance(p) < 500.0 && p.distance(target) > p.distance(sp)){
+				if (sp.distance(p) < 250.0 && p.distance(target) > p.distance(sp)){
 					target = sp;
 					alerted = true;
 				}
