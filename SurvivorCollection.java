@@ -21,6 +21,9 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
   private Point2D.Double currentTarget;
   private boolean targetReached = false;
   private boolean targetIsResource = true;
+  
+  //Change the size of survivors (should do the same for zombies)
+  private double diameter = 8;
 	
 	public SurvivorCollection(double h, double w, World wrld){
 		super(h,w);
@@ -41,7 +44,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				Point2D.Double rp = rIter.next();
 				currentTarget = rp;
 				
-				if (rp.distance(p) < 20.0){
+				if (rp.distance(p) < diameter){
 					targetReached = true;
 					world.clearResources();
 					world.addRandomResources(1);
@@ -54,7 +57,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				}
 			} else {
 				currentTarget = world.getBase();
-				if (world.getBase().distance(p) < 20.0){
+				if (world.getBase().distance(p) < diameter){
 					targetReached = true;
 					world.resourceGathered();
 					targetIsResource = true;
@@ -72,7 +75,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			while (zIter.hasNext()){
 				Point2D.Double zp = zIter.next();
 				
-				if (zp.distance(p) < 20.0){
+				if (zp.distance(p) < diameter){
 					dead = true;
 					targetReached = false;
 					targetIsResource = true;
@@ -253,7 +256,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		Iterator<Point2D.Double> iter = this.get();
 		while (iter.hasNext()){
 			Point2D.Double p = iter.next();
-			g.fillOval((int) p.x-10, (int) p.y-10, 20, 20);
+			g.fillOval((int) (p.x-(diameter/2)), (int) (p.y-(diameter/2)), (int)diameter, (int)diameter);
 		}
 		
 	} 

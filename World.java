@@ -27,7 +27,7 @@ public class World implements Dynamic {
 		baseLoc = randomPointInWorld();
 		
 		zc = new ZombieCollection(h,w,this);
-		this.addRandomZombies(10);
+		this.addRandomZombies(110);
 		
 		sc = new SurvivorCollection(h,w,this);
 		
@@ -80,7 +80,7 @@ public class World implements Dynamic {
 	
 	public Point2D.Double randomPointInWorld(){
 		return new Point2D.Double(rand.nextDouble()*width,
-															rand.nextDouble()*height);
+								rand.nextDouble()*height);
 	}
 	
 	
@@ -89,7 +89,8 @@ public class World implements Dynamic {
 			sc.update(delay);
 		else
 			sc.add(baseLoc);
-			
+		
+		//TODO Can this be deleted?
 		if (zc.size() < 10)
 			addRandomZombies(10 - zc.size());
 			

@@ -20,7 +20,7 @@ import javax.swing.text.JTextComponent;
 public class MyFrame extends JFrame implements KeyListener, ActionListener{
 	private static final long serialVersionUID = -2122161377842820073L;
 
-	private JPanel panel1, panel2, panel3, topPanel;
+	private JPanel panel1, panel2, panel3, topPanel, panel4;
 	private JRadioButton radioButton1, radioButton2, radioButton3, radioButton4;
 	private JButton button1, button2, button3;
 	private JLabel text1;
@@ -85,11 +85,14 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		
 		panel3 = new JPanel();
 		panel3.setLayout(new GridLayout(6, 1));
-		panel3.add(panel1);
+		panel4 = new JPanel();
+		panel4.setLayout(new GridLayout(3, 1));
+		//panel3.add(panel1);
 		panel3.add(panel2);
-		panel3.add(button1);
-		panel3.add(button2);
-		panel3.add(button3);
+		panel4.add(button1);
+		panel4.add(button2);
+		panel4.add(button3);
+		panel3.add(panel4);
 		this.add(panel3, BorderLayout.WEST);
 		
 		displayPanel = new MyDisplayPanel(this);
@@ -156,6 +159,9 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 			displayPanel.setBackground(new Color(255,255,255));
 			displayPanel.update(timer.getDelay());
 			displayPanel.repaint();
+			World wor = displayPanel.getWorld();
+			if(time % 100 == 0 && wor.getSurvCollection().size() < 10)
+				wor.getSurvCollection().add(wor.getBase());
 		}
 		else if(arg0.getSource().equals(button1)){
 			button1.setEnabled(false);
@@ -189,8 +195,11 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 			this.requestFocus();
 		}
 		else if(arg0.getSource().equals(button3)){
+			time = 0;
+			resources = 0;
 			displayPanel.initWorld();
 			displayPanel.repaint();
+			text1.setText("Resources gathered: " + resources + " | Time elapsed: " + time);
 		}
 	}
 }
