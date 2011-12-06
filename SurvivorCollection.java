@@ -207,8 +207,8 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				Point2D.Double candidate = stIter.next();
 				if (candidate.distance(p) < nextSubTarget.distance(p) &&
 						candidate.distance(currentTarget) < p.distance(currentTarget) &&
-						candidate.distance(p) > 50.0 &&
-						closestZombieDistance(candidate) > 75.0){
+						closestZombieToPath(p, candidate) > 50.0
+						){
 					nextSubTarget = candidate;
 					suitableSubTargetFound = true;
 				}
@@ -226,6 +226,18 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		
 		//System.out.println("new subtarget: ("+currentSubTarget.x+", "+currentSubTarget.y+")");
 		return new Point2D.Double(xChange, yChange);
+	}
+	
+	//returns the distance from a line (p1 to p2) to nearest zombie
+	private double closestZombieToPath(Point2D.Double p1, Point2D.Double p2){
+		Iterator<Point2D.Double> zombies = world.getZombies();
+		double closest = 1000000000;
+		while (zombies.hasNext()){
+			Point2D.Double z = zombies.next();
+			if (DistancePoint.distanceToSegment((Point2D) p1, (Point2D) p2, (Point2D) z) < closest)
+				closest = DistancePoint.distanceToSegment(p1, p2, z);
+		}
+		return closest;
 	}
 	
 	//returns the distance from a point to the closest zombie
