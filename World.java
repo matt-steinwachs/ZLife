@@ -74,6 +74,10 @@ public class World implements Dynamic {
 		}
 	}
 	
+	public void clearResources(){
+		rc = new ResourceCollection(height,width,this);
+	}
+	
 	public Point2D.Double randomPointInWorld(){
 		return new Point2D.Double(rand.nextDouble()*width,
 															rand.nextDouble()*height);

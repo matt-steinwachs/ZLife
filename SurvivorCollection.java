@@ -43,6 +43,10 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				
 				if (rp.distance(p) < 20.0){
 					targetReached = true;
+					world.clearResources();
+					world.addRandomResources(1);
+					
+					//set new target to base
 					targetIsResource = false;
 					currentTarget = world.getBase();
 				} else {
@@ -150,19 +154,30 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			double worldHeight = super.getWorldHeight();
 			double worldWidth = super.getWorldWidth();
 			dt.delaunayPlace(new Pnt(1, 1));
-			dt.delaunayPlace(new Pnt(1, worldHeight/2));
+			dt.delaunayPlace(new Pnt(1, worldHeight/3));
+			dt.delaunayPlace(new Pnt(1, worldHeight*2/3));
 			dt.delaunayPlace(new Pnt(1, worldHeight-1));
 			
-			dt.delaunayPlace(new Pnt(worldWidth/2, 1));
+			dt.delaunayPlace(new Pnt(worldWidth/3, 1));
+			dt.delaunayPlace(new Pnt(worldWidth*2/3, 1));
 			dt.delaunayPlace(new Pnt(worldWidth-1, 1));
 			
-			dt.delaunayPlace(new Pnt(worldWidth-1, worldHeight/2));
+			dt.delaunayPlace(new Pnt(worldWidth-1, worldHeight/3));
+			dt.delaunayPlace(new Pnt(worldWidth-1, worldHeight*2/3));
 			dt.delaunayPlace(new Pnt(worldWidth-1, worldHeight-1));
 			
-			dt.delaunayPlace(new Pnt(worldWidth/2, worldHeight-1));
-			
+			dt.delaunayPlace(new Pnt(worldWidth/3, worldHeight-1));
+			dt.delaunayPlace(new Pnt(worldWidth*2/3, worldHeight-1));
+
 			//Add survivor location to triangulation
 			//dt.delaunayPlace(new Pnt(p.x, p.y));
+			
+			//Add n random points to triangulation
+			//int n = 0;
+			//for (int j=0; j<n; j++){
+			//	Point2D.Double rp = world.randomPointInWorld();
+			//	dt.delaunayPlace(new Pnt(rp.x, rp.y));
+			//}
 			
 			//get vertices of voronoi graph
 			TreeSet<Point2D.Double> subTargets = new TreeSet<Point2D.Double>(new XPointCompare());
@@ -186,16 +201,24 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				nextSubTarget = stIter.next();
 			else
 				System.out.println("no candidate subtargets!");
-				
+			
+			boolean suitableSubTargetFound = false;	
 			while (stIter.hasNext()){
 				Point2D.Double candidate = stIter.next();
 				if (candidate.distance(p) < nextSubTarget.distance(p) &&
 						candidate.distance(currentTarget) < p.distance(currentTarget) &&
-						candidate.distance(p) > 10.0 &&
-						closestZombieDistance(candidate) > 20.0)
+						candidate.distance(p) > 50.0 &&
+						closestZombieDistance(candidate) > 75.0){
 					nextSubTarget = candidate;
+					suitableSubTargetFound = true;
+				}
 			}
 			currentSubTarget = nextSubTarget;
+			
+			if (!suitableSubTargetFound){
+				System.out.println("No suitable subtarget found.");
+				currentSubTarget = currentTarget;
+			}
 		}
 		
 		double xChange = currentSubTarget.x - p.x;
