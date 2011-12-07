@@ -27,7 +27,7 @@ public class World implements Dynamic {
 		baseLoc = randomPointInWorld();
 		
 		zc = new ZombieCollection(h,w,this);
-		this.addRandomZombies(110);
+		this.addRandomZombies(10);
 		
 		sc = new SurvivorCollection(h,w,this);
 		
@@ -89,11 +89,6 @@ public class World implements Dynamic {
 			sc.update(delay);
 		else
 			sc.add(baseLoc);
-		
-		//TODO Can this be deleted?
-		if (zc.size() < 10)
-			addRandomZombies(10 - zc.size());
-			
 		zc.update(delay);
 	}
 	

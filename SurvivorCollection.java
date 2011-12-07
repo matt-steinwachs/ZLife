@@ -262,7 +262,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 
 	public void draw (Graphics g){
 		if (targetIsResource)
-			g.setColor(new Color(0,0,255));
+			g.setColor(new Color(255,255,255));
 		else 
 			g.setColor(new Color(255,0,255));
 		

@@ -24,7 +24,22 @@ public class PotentialField {
 //				"\nbase:" + world.getBase().x + " " + world.getBase().y);
 		
 		// compute vector to target
-		Double vec = this.computeVector(survivor, target);
+		
+		Iterator<Point2D.Double> resources = world.getResources();
+		Point2D.Double best = null;
+		if(target.x != world.getBase().x && target.y != world.getBase().y) {
+			double bestDist = java.lang.Double.MAX_VALUE;
+			while(resources.hasNext()){
+				Point2D.Double resource = resources.next();
+				if(best == null || resource.distanceSq(survivor) < best.distanceSq(survivor)){
+					best = resource;
+					bestDist = best.distanceSq(survivor);
+				}
+			}
+		}
+		else
+			best = world.getBase();
+		Double vec = this.computeVector(survivor, best);
 		// compute vectors away from zombies
 		for(Iterator<Double> zombies = world.getZombies();zombies.hasNext();){
 			Double zombie = zombies.next();
