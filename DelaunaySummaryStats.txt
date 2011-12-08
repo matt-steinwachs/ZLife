@@ -1,0 +1,22 @@
+Delaunay Triangulation Algorithm Data:
+Number Of Trials: 50
+World Height: 1171
+World Width: 1399
+Distance From Resource To Base: 500-510
+=======================================
+
+With 10 zombies:
+Success Ratio: 37/50
+Average Number Of Timesteps In Successful Trips: 1273
+
+With 15 zombies:
+Success Ratio: 26/50
+Average Number Of Timesteps In Successful Trips: 1274
+
+With 20 zombies:
+Success Ratio: 17/50
+Average Number Of Timesteps In Successful Trips: 1342
+
+With 25 zombies:
+Success Ratio: 15/50
+Average Number Of Timesteps In Successful Trips: 1282

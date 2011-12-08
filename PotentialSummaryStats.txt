@@ -1,0 +1,34 @@
+Potential Fields Algorithm Data:
+Number Of Trials: 50
+World Height: 1171
+World Width: 1399
+Distance From Resource To Base: 500-510
+=======================================
+
+With 10 zombies:
+Success Ratio: 48/50
+Average Number Of Timesteps In Successful Trips: 998
+
+With 15 zombies:
+Success Ratio: 47/50
+Average Number Of Timesteps In Successful Trips: 1011
+
+With 20 zombies:
+Success Ratio: 47/50
+Average Number Of Timesteps In Successful Trips: 1022
+
+With 25 zombies:
+Success Ratio: 45/50
+Average Number Of Timesteps In Successful Trips: 1017
+
+With 50 zombies:
+Success Ratio: 34/50
+Average Number Of Timesteps In Successful Trips: 1118
+
+With 100 zombies:
+Success Ratio: 20/50
+Average Number Of Timesteps In Successful Trips: 1277
+
+With 150 zombies:
+Success Ratio: 13/50
+Average Number Of Timesteps In Successful Trips: 1510
