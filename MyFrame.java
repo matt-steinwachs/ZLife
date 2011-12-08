@@ -15,6 +15,9 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.text.JTextComponent;
 
+import java.io.*;
+import java.lang.*;
+
 
 
 public class MyFrame extends JFrame implements KeyListener, ActionListener{
@@ -31,6 +34,9 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 	private static final Color background = new Color(0,0,0);
 	private GraphicsDevice myGraphicsDevice;
 	private boolean fullscreen = true;
+	private BufferedWriter out;
+	private boolean loggedWorld = false;
+	private int runsLogged = 0;
 	
 	public MyFrame () {
 		timer = new Timer(1, this);
@@ -49,6 +55,11 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		button1.addActionListener(this);
 		button2.addActionListener(this);
 		button3.addActionListener(this);
+		
+		//Open file for logging
+		try {
+			out = new BufferedWriter(new FileWriter("potentialStats150Zombies.txt"));
+		} catch (IOException e) {System.exit(2);}
 		
 		
 		text1 = new JLabel("<html>&nbsp;&nbsp;&nbsp;Resources gathered: " + resources + " | Time elapsed: " + time + "</html>");
@@ -136,6 +147,9 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 	public void keyPressed(KeyEvent arg0) {
 		// TODO Auto-generated method stub
 		if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+			try {
+				out.close();
+			} catch (IOException e) {System.exit(2);}
 			System.exit(0);
 		}
 	}
@@ -164,42 +178,86 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 				wor.getSurvCollection().add(wor.getBase());*/
 		}
 		else if(arg0.getSource().equals(button1)){
-			button1.setEnabled(false);
-			button2.setEnabled(true);
-			button3.setEnabled(false);
-			if(radioButton3.isSelected()){
-				System.out.println("Delauney selected!");
-				displayPanel.getWorld().getSurvCollection().setDelauney();
-			}
-			else if (radioButton4.isSelected()){
-				System.out.println("Potential selected!?");
-				displayPanel.getWorld().getSurvCollection().setPotential();
-			}
-			radioButton1.setEnabled(false);
-			radioButton2.setEnabled(false);
-			radioButton3.setEnabled(false);
-			radioButton4.setEnabled(false);
-			timer.start();
-			this.requestFocus();
+			start();
 		}
 		else if(arg0.getSource().equals(button2)){
-			button1.setEnabled(true);
-			button2.setEnabled(false);
-			button3.setEnabled(true);
-			radioButton1.setEnabled(true);
-			radioButton2.setEnabled(true);
-			radioButton3.setEnabled(true);
-			radioButton4.setEnabled(true);
-			displayPanel.setBackground(background);
-			timer.stop();
-			this.requestFocus();
+			pause();
 		}
 		else if(arg0.getSource().equals(button3)){
-			time = 0;
-			resources = 0;
-			displayPanel.initWorld();
-			displayPanel.repaint();
-			text1.setText("Resources gathered: " + resources + " | Time elapsed: " + time);
+			reset();
+		}
+	}
+	
+	public void reset(){
+		time = 0;
+		resources = 0;
+		displayPanel.initWorld();
+		displayPanel.repaint();
+		text1.setText("Resources gathered: " + resources + " | Time elapsed: " + time);
+	}
+	
+	public void pause(){
+		button1.setEnabled(true);
+		button2.setEnabled(false);
+		button3.setEnabled(true);
+		radioButton1.setEnabled(true);
+		radioButton2.setEnabled(true);
+		radioButton3.setEnabled(true);
+		radioButton4.setEnabled(true);
+		displayPanel.setBackground(background);
+		timer.stop();
+		this.requestFocus();
+	}
+	
+	public void start(){
+		button1.setEnabled(false);
+		button2.setEnabled(true);
+		button3.setEnabled(false);
+		if(radioButton3.isSelected()){
+			System.out.println("Delauney selected!");
+			displayPanel.getWorld().getSurvCollection().setDelauney();
+		}
+		else if (radioButton4.isSelected()){
+			System.out.println("Potential selected!?");
+			displayPanel.getWorld().getSurvCollection().setPotential();
+		}
+		radioButton1.setEnabled(false);
+		radioButton2.setEnabled(false);
+		radioButton3.setEnabled(false);
+		radioButton4.setEnabled(false);
+		timer.start();
+		this.requestFocus();
+	}
+	
+	public void logTimeToGetOne(){
+		try {
+			out.write(Integer.toString(time)+"\n");
+			runsLogged++;
+			if (runsLogged == 50){
+				out.close();
+				System.exit(0);
+			}
+		} catch (IOException e) {System.exit(2);}
+	}
+	
+	public void logDeath(){
+		try {
+			out.write("Death\n");
+			runsLogged++;
+			if (runsLogged == 50){
+				out.close();
+				System.exit(0);
+			}
+		} catch (IOException e) {System.exit(2);}
+	}
+	
+	public void logWorldSize(double h, double w){
+		System.out.println("logging world size");
+		if (!loggedWorld){
+			try {
+				out.write("World Dimensions (height x width): "+h+" x "+w+"\n");
+				loggedWorld = true;
+			} catch (IOException e) {System.exit(2);}
 		}
 	}
 }

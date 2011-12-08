@@ -63,6 +63,11 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 					targetIsResource = true;
 					Iterator<Point2D.Double> resources = world.getResources();
 					currentTarget = resources.next();
+					
+					world.myFrame.pause();
+					world.myFrame.logTimeToGetOne();
+					world.myFrame.reset();
+					world.myFrame.start();
 				} else {
 					targetReached = false;
 				}
@@ -81,6 +86,11 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 					targetIsResource = true;
 					subTargetReached = true;
 					System.out.println("survivor died");
+					
+					world.myFrame.pause();
+					world.myFrame.logDeath();
+					world.myFrame.reset();
+					world.myFrame.start();
 				}
 			}
 			
@@ -124,7 +134,8 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		//double yChange = currentTarget.y - p.y;
 		//return new Point2D.Double(xChange, yChange);
 		
-		if (p.distance(currentTarget) < 100.0){
+		if (p.distance(currentTarget) < 150.0 &&
+				closestZombieToPath(p, currentTarget) > 50){
 			currentSubTarget = currentTarget;
 			System.out.println("Close enough to target. Going for it!.");
 		} else if (subTargetReached){
@@ -139,7 +150,9 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			Iterator<Point2D.Double> zombies = world.getZombies();
 			while (zombies.hasNext()){
 				Point2D.Double z = zombies.next();
-				dt.delaunayPlace(new Pnt(z.x,z.y));
+				if (z.x > 0 && z.x < super.getWorldWidth() &&
+						z.y > 0 && z.y < super.getWorldHeight())
+					dt.delaunayPlace(new Pnt(z.x,z.y));
 			}
 			
 			//Add resources to triangulation
@@ -210,7 +223,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				Point2D.Double candidate = stIter.next();
 				if (candidate.distance(p) < nextSubTarget.distance(p) &&
 						candidate.distance(currentTarget) < p.distance(currentTarget) &&
-						closestZombieToPath(p, candidate) > 30.0
+						closestZombieToPath(p, candidate) > 50.0
 						){
 					nextSubTarget = candidate;
 					suitableSubTargetFound = true;
@@ -219,7 +232,25 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			currentSubTarget = nextSubTarget;
 			
 			if (!suitableSubTargetFound){
-				System.out.println("No suitable subtarget found.");
+				System.out.println("No suitable subtarget found. Considering riskier paths.");
+				stIter =  subTargets.iterator();
+				nextSubTarget = stIter.next();
+				while (stIter.hasNext()){
+					Point2D.Double candidate = stIter.next();
+					if (candidate.distance(p) < nextSubTarget.distance(p) &&
+							candidate.distance(currentTarget) < p.distance(currentTarget) &&
+							candidate.distance(p) > 10.0
+							//closestZombieToPath(p, candidate) > 50.0
+							){
+						nextSubTarget = candidate;
+						suitableSubTargetFound = true;
+					}
+				}
+				currentSubTarget = nextSubTarget;
+			}
+			
+			if (!suitableSubTargetFound){
+				System.out.println("Suitable subtarget still not found. Going for it.");
 				currentSubTarget = currentTarget;
 				subTargetReached = true;
 			}

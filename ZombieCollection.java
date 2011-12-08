@@ -43,8 +43,7 @@ public class ZombieCollection extends PointCollection implements Dynamic{
 				
 				newPoints.add(new Point2D.Double(p.x+xChange/(div*2.0), p.y+yChange/(div*2.0)));
 			} else if (!destroyed) {
-				Random ran = new Random();
-				newPoints.add(new Point2D.Double(p.x + ran.nextDouble() - 0.5, p.y + ran.nextDouble() - 0.5));
+				newPoints.add(new Point2D.Double(p.x, p.y));
 			} else {
 				newPoints.add(world.randomPointInWorld());
 			}

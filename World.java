@@ -3,6 +3,7 @@ import java.util.Iterator;
 import java.util.Random;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.io.*;
 
 
 public class World implements Dynamic {
@@ -14,7 +15,7 @@ public class World implements Dynamic {
 	private double height;
 	private double width;
 	
-	private MyFrame myFrame;
+	public MyFrame myFrame;
 	
 	private Random rand;
 	
@@ -24,10 +25,12 @@ public class World implements Dynamic {
 		myFrame = mf;
 		rand = new Random();
 		
+		mf.logWorldSize(h, w);
+		
 		baseLoc = randomPointInWorld();
 		
 		zc = new ZombieCollection(h,w,this);
-		this.addRandomZombies(10);
+		this.addRandomZombies(150);
 		
 		sc = new SurvivorCollection(h,w,this);
 		
@@ -68,7 +71,8 @@ public class World implements Dynamic {
 	public void addRandomResources(int num){
 		for (int i=0; i<num; i++){
 			Point2D.Double candidate = randomPointInWorld();
-			while (candidate.distance((Point2D) baseLoc) < 300.0)
+			while (candidate.distance((Point2D) baseLoc) < 500.0 ||
+						 candidate.distance((Point2D) baseLoc) > 510.0)
 				candidate = randomPointInWorld();
 			rc.add(candidate);
 		}
