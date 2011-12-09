@@ -6,7 +6,7 @@ public class PotentialField {
 	private World world;
 	private Double target, survivor;
 	private boolean targetResource;
-	private double survivorDiameter = 20.0;
+	private double survivorDiameter;
 	
 	public PotentialField(World wor, Double currentTarget,
 			boolean targetIsResource, Double p) {
@@ -15,6 +15,7 @@ public class PotentialField {
 		target = currentTarget;
 		targetResource = targetIsResource;
 		survivor = p;
+		survivorDiameter = wor.getDiameter();
 	}
 
 	public Point2D.Double calculate() {
@@ -25,6 +26,36 @@ public class PotentialField {
 		
 		// compute vector to target
 		
+		Point2D.Double best = getBest();
+		Double vec = this.computeVector(survivor, best);
+		// compute vectors away from zombies
+		for(Iterator<Double> zombies = world.getZombies();zombies.hasNext();){
+			Double zombie = zombies.next();
+			double zombieDist = survivor.distance(zombie) - survivorDiameter;
+			double zombieThreat = 10.0 / zombieDist;
+			
+			if(zombieThreat > 0.0001){
+				/*Double runAway = new Point2D.Double(0.3 * zombieDist * (survivor.x - zombie.x), 
+						0.3 * zombieDist * (survivor.y - zombie.y));*/
+				//System.out.println(zombieDist);
+				Double runAway = new Point2D.Double(40 * zombieThreat * zombieThreat * (survivor.x - zombie.x), 
+						40 * zombieThreat * zombieThreat * (survivor.y - zombie.y));
+				if(runAway.x > runAway.y){
+					runAway.x *= 3.0;
+				}
+				else{
+					runAway.y *= 3.0;
+				}
+				vec.setLocation(vec.x + runAway.x, vec.y + runAway.y);
+			}
+		}
+		return vec;
+	}
+
+	/**
+	 * @return
+	 */
+	public Point2D.Double getBest() {
 		Iterator<Point2D.Double> resources = world.getResources();
 		Point2D.Double best = null;
 		if(target.x != world.getBase().x && target.y != world.getBase().y) {
@@ -39,29 +70,7 @@ public class PotentialField {
 		}
 		else
 			best = world.getBase();
-		Double vec = this.computeVector(survivor, best);
-		// compute vectors away from zombies
-		for(Iterator<Double> zombies = world.getZombies();zombies.hasNext();){
-			Double zombie = zombies.next();
-			double zombieDist = survivor.distance(zombie) - survivorDiameter;
-			double zombieThreat = 10.0 / zombieDist;
-			
-			if(zombieThreat > 0.0001){
-				/*Double runAway = new Point2D.Double(0.3 * zombieDist * (survivor.x - zombie.x), 
-						0.3 * zombieDist * (survivor.y - zombie.y));*/
-				//System.out.println(zombieDist);
-				Double runAway = new Point2D.Double(30 * zombieThreat * zombieThreat * (survivor.x - zombie.x), 
-						30 * zombieThreat * zombieThreat * (survivor.y - zombie.y));
-				if(runAway.x > runAway.y){
-					runAway.x *= 2.0;
-				}
-				else{
-					runAway.y *= 2.0;
-				}
-				vec.setLocation(vec.x + runAway.x, vec.y + runAway.y);
-			}
-		}
-		return vec;
+		return best;
 	}
 
 	private Double computeVector(Double element1, Double element2) {

@@ -1,4 +1,5 @@
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.util.Iterator;
 import java.util.Random;
 import java.awt.Graphics;
@@ -17,6 +18,7 @@ public class World implements Dynamic {
 	private MyFrame myFrame;
 	
 	private Random rand;
+	private double diameter;
 	
 	public World(double h, double w, MyFrame mf){
 		height = h;
@@ -26,8 +28,20 @@ public class World implements Dynamic {
 		
 		baseLoc = randomPointInWorld();
 		
+		if(mf.getApocalypse() == 10){
+			diameter = 20;
+		}
+		else{
+			diameter = 8;
+		}
+		
 		zc = new ZombieCollection(h,w,this);
-		this.addRandomZombies(10);
+		if(mf.getApocalypse() == 10){
+			this.addRandomZombies(10);
+		}
+		else{
+			this.addRandomZombies(100);
+		}
 		
 		sc = new SurvivorCollection(h,w,this);
 		
@@ -104,4 +118,21 @@ public class World implements Dynamic {
 	public SurvivorCollection getSurvCollection(){
 		return sc;
 	}
+
+	public double getDiameter() {
+		// TODO Auto-generated method stub
+		return diameter;
+	}
+
+	/*public void clearResource() {
+		Iterator<Point2D.Double> iter2 = sc.get();
+		Point2D.Double rc = new PotentialField(world, currentTarget, targetIsResource, iter2.next())).getBest();
+		Iterator<Point2D.Double> iter = rc.get();
+		while(iter.hasNext()){
+			Point2D.Double point = iter.next();
+			if(point.x == rp.x && point.y == rp.y){
+				rc.remove(point);
+			}
+		}
+	}*/
 }

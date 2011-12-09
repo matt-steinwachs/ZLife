@@ -6,11 +6,12 @@ import java.awt.Graphics;
 
 public class ZombieCollection extends PointCollection implements Dynamic{
 	private World world;
-	private int diameter = 20;
+	private double diameter;
 	
 	public ZombieCollection(double h, double w, World wrld){
 		super(h,w);
 		world = wrld;
+		diameter = wrld.getDiameter();
 	}
 	
 	public void update(int delay){
@@ -59,7 +60,7 @@ public class ZombieCollection extends PointCollection implements Dynamic{
 		Iterator<Point2D.Double> iter = this.get();
 		while (iter.hasNext()){
 			Point2D.Double p = iter.next();
-			g.fillOval((int) p.x-(diameter/2), (int) p.y-(diameter/2), diameter, diameter);
+			g.fillOval((int) (p.x-(diameter/2)), (int) (p.y-(diameter/2)), (int)diameter, (int)diameter);
 		}
 	} 
 }

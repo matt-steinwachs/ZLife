@@ -21,7 +21,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 	private static final long serialVersionUID = -2122161377842820073L;
 
 	private JPanel panel1, panel2, panel3, topPanel, panel4;
-	private JRadioButton radioButton1, radioButton2, radioButton3, radioButton4;
+	private JRadioButton radioButton1, radioButton2, radioButton3, radioButton4, radioButton5, radioButton6;
 	private JButton button1, button2, button3;
 	private JLabel text1;
 	private MyDisplayPanel displayPanel;
@@ -59,11 +59,11 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		
 		this.add(topPanel, BorderLayout.NORTH);
 		
-		radioButton1 = new JRadioButton("Ant Colony Optimization");
-		radioButton1.setToolTipText("<html><u>Ant Colony Optimization:</u> <br>&nbsp;Details</html>");
+		radioButton1 = new JRadioButton("10 Zombies");
 		radioButton1.setSelected(true);
-		radioButton2 = new JRadioButton("Artificial Bee Colony");
-		radioButton2.setToolTipText("<html><u>Artificial Bee Colony:</u> <br>&nbsp;Details</html>");
+		radioButton2 = new JRadioButton("Mega Apocalypse");
+		radioButton5 = new JRadioButton("Mega-Multi Apocalypse");
+		radioButton6 = new JRadioButton("Hyper-Multi Apocalypse");
 		
 		radioButton3 = new JRadioButton("Delaunay Triangulation");
 		radioButton3.setToolTipText("<html><u>Delaunay Triangulation:</u> <br>&nbsp;Details</html>");
@@ -73,21 +73,25 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		
 		group1.add(radioButton1);
 		group1.add(radioButton2);
+		group1.add(radioButton5);
+		group1.add(radioButton6);
 		group2.add(radioButton3);
 		group2.add(radioButton4);
 		
 		panel1.add(radioButton1);
 		panel1.add(radioButton2);
+		panel1.add(radioButton5);
+		panel1.add(radioButton6);
 		panel2.add(radioButton3);
 		panel2.add(radioButton4);
-		panel1.setBorder(BorderFactory.createTitledBorder("Global Search Alg."));
-		panel2.setBorder(BorderFactory.createTitledBorder("Local Search Alg."));
+		panel1.setBorder(BorderFactory.createTitledBorder("Apocalypse Severity"));
+		panel2.setBorder(BorderFactory.createTitledBorder("Path-finding Alg."));
 		
 		panel3 = new JPanel();
 		panel3.setLayout(new GridLayout(6, 1));
 		panel4 = new JPanel();
 		panel4.setLayout(new GridLayout(3, 1));
-		//panel3.add(panel1);
+		panel3.add(panel1);
 		panel3.add(panel2);
 		panel4.add(button1);
 		panel4.add(button2);
@@ -101,7 +105,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		this.add(displayPanel, BorderLayout.CENTER);
 		
 		setTitle ("ZLife - The Artificial Unlife Simulator");
-		setSize(800,600);
+		setSize(1366,768);
 		
 		setLocation(0,0);
 		
@@ -109,7 +113,7 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		myGraphicsDevice = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 		if(myGraphicsDevice.isFullScreenSupported() && fullscreen){
 			this.setUndecorated(true);
-			myGraphicsDevice.setFullScreenWindow(this);
+			//myGraphicsDevice.setFullScreenWindow(this);
 		}
 		
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -124,6 +128,8 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 		radioButton2.addKeyListener(this);
 		radioButton3.addKeyListener(this);
 		radioButton4.addKeyListener(this);
+		radioButton5.addKeyListener(this);
+		radioButton6.addKeyListener(this);
 		this.addKeyListener(this);
 		this.requestFocus();
 	}
@@ -159,9 +165,18 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 			displayPanel.setBackground(new Color(255,255,255));
 			displayPanel.update(timer.getDelay());
 			displayPanel.repaint();
-			/* World wor = displayPanel.getWorld();
-			if(time % 100 == 0 && wor.getSurvCollection().size() < 10)
-				wor.getSurvCollection().add(wor.getBase());*/
+			if(radioButton5.isSelected() || radioButton6.isSelected()){
+				World wor = displayPanel.getWorld();
+				int timeSplit; int survivors;
+				if(radioButton5.isSelected()){
+					timeSplit = 100; survivors = 10;
+				}
+				else{
+					timeSplit = 1; survivors = 10000;
+				}
+				if(time % timeSplit == 0 && wor.getSurvCollection().size() < survivors)
+					wor.getSurvCollection().add(wor.getBase());
+			}
 		}
 		else if(arg0.getSource().equals(button1)){
 			button1.setEnabled(false);
@@ -201,5 +216,13 @@ public class MyFrame extends JFrame implements KeyListener, ActionListener{
 			displayPanel.repaint();
 			text1.setText("Resources gathered: " + resources + " | Time elapsed: " + time);
 		}
+	}
+
+	public int getApocalypse() {
+		// TODO Auto-generated method stub
+		if(radioButton1.isSelected())
+			return 10;
+		else
+			return 100;
 	}
 }

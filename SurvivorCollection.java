@@ -23,11 +23,12 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
   private boolean targetIsResource = true;
   
   //Change the size of survivors (should do the same for zombies)
-  private double diameter = 20;
+  private double diameter;
 	
 	public SurvivorCollection(double h, double w, World wrld){
 		super(h,w);
 		world = wrld;
+		diameter = wrld.getDiameter();
 	}
 	
 	public void update(int delay){
@@ -124,7 +125,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 		//double yChange = currentTarget.y - p.y;
 		//return new Point2D.Double(xChange, yChange);
 		
-		if (p.distance(currentTarget) < 100.0){
+		if (p.distance(currentTarget) < 75.0){
 			currentSubTarget = currentTarget;
 			System.out.println("Close enough to target. Going for it!.");
 		} else if (subTargetReached){
@@ -139,7 +140,8 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 			Iterator<Point2D.Double> zombies = world.getZombies();
 			while (zombies.hasNext()){
 				Point2D.Double z = zombies.next();
-				dt.delaunayPlace(new Pnt(z.x,z.y));
+				if(z.x > 0 && z.x < super.getWorldWidth() && z.y > 0 && z.y < super.getWorldHeight())
+					dt.delaunayPlace(new Pnt(z.x,z.y));
 			}
 			
 			//Add resources to triangulation
@@ -210,7 +212,7 @@ public class SurvivorCollection extends PointCollection implements Dynamic{
 				Point2D.Double candidate = stIter.next();
 				if (candidate.distance(p) < nextSubTarget.distance(p) &&
 						candidate.distance(currentTarget) < p.distance(currentTarget) &&
-						closestZombieToPath(p, candidate) > 30.0
+						closestZombieToPath(p, candidate) > 50.0
 						){
 					nextSubTarget = candidate;
 					suitableSubTargetFound = true;
